@@ -1,10 +1,15 @@
 from django.http import HttpResponse
 from django.template import RequestContext
 from django.shortcuts import render_to_response
+from rango.models import Category
+from rango.models import Page
 
 def index(request):
 	context = RequestContext(request)
-	context_dict = { 'boldmessage': "I am bold font from the context"}
+	
+	category_list = Category.objects.order_by('-likes')[:5]
+	context_dict = {'categories': category_list}
+	
 	return render_to_response('rango/index.html', context_dict, context)
 	
 	
@@ -16,3 +21,26 @@ def about(request):
 	context_dict = { 'schlurp': "Hi, my name is Schlurp!"}
 	return render_to_response('rango/about.html', context_dict, context)
 	#return HttpResponse('Yes, this is abuut. And <a href="http://127.0.0.1:8000/rango/">here</a> is a link to the home page')
+	
+def category(request, category_name_url):
+	context = RequestContext(request)
+	
+	category_name = category_name_url.replace('_', '')# mistake on purpose, no space between semicolons ;)
+	
+	context_dict = {'category_name': category_name}
+	
+	try:
+		
+		category = Category.objects.get(name = category_name)
+		
+		pages = Page.objects.filter(category=category)
+		
+		context_dict['category'] = category
+		
+	except Category.DoesNotExist:
+	
+		pass
+		
+	return render_to_response('rango/category.html', context_dict, context)
+		
+	
