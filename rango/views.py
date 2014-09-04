@@ -30,7 +30,7 @@ def category(request, category_name_url):
 
 	context = RequestContext(request)
 	
-	category_name = category_name_url.replace('_', ' ')# mistake on purpose, no space between semicolons ;)
+	category_name = category_name_url.replace('_', ' ')
 	
 	context_dict = {'category_name': category_name}
 	
