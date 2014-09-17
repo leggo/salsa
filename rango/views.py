@@ -4,6 +4,7 @@ from django.shortcuts import render_to_response
 from rango.models import Category
 from rango.models import Page
 from rango.forms import CategoryForm 
+from rango.forms import PageForm
 
 def index(request):
 	context = RequestContext(request)
@@ -80,3 +81,49 @@ def add_category(request):
     # Bad form (or form details), no form supplied...
     # Render the form with error messages (if any).
     return render_to_response('rango/add_category.html', {'form': form}, context)
+	
+	
+def add_page(request, category_name_url):
+	context = RequestContext(request)
+	
+	category_name = decode_url(category_name_url)
+	
+	if request.method == 'POST':
+		form = PageForm(request.POST)
+		
+		if form.is_valid():
+			page = form.save(commit=False)
+			
+			try:
+				cat = Category.objects.get(name=category_name)
+				page.category = cat
+			except Category.DoesNotExist:
+			
+				return render_to_response('rango/add_category.html', {}, context)
+				
+				
+			page.views = 0
+			
+			page.save()
+			
+			return category(request, category_name_url)
+			
+		else:
+			print form.errors
+	
+	else:
+		form = PageForm()
+		
+	return render_to_response('rango/add_page.html',
+			{'category_name_url': category_name_url,
+			'category_name': category_name, 'form': form},
+			context)
+			
+			
+			
+			
+			
+			
+			
+			
+		
