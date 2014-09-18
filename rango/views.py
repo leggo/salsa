@@ -35,7 +35,12 @@ def category(request, category_name_url):
 	
 	category_name = category_name_url.replace('_', ' ')
 	
-	context_dict = {'category_name': category_name}
+
+	context_dict = {'category_name': category_name, 'category_name_url': category_name_url}
+	
+
+	
+
 	
 	try:
 		
@@ -46,6 +51,8 @@ def category(request, category_name_url):
 		context_dict['category'] = category
 		
 		context_dict['pages'] = pages
+		
+		#context_dict['category_name_url'] = category_name_url
 		
 	except Category.DoesNotExist:
 	
@@ -81,6 +88,10 @@ def add_category(request):
     # Bad form (or form details), no form supplied...
     # Render the form with error messages (if any).
     return render_to_response('rango/add_category.html', {'form': form}, context)
+	
+
+def decode_url(category_name_url):
+	return category_name_url
 	
 	
 def add_page(request, category_name_url):
