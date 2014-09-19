@@ -91,7 +91,7 @@ def add_category(request):
 	
 
 def decode_url(category_name_url):
-	return category_name_url
+	return category_name_url.replace('_', ' ')
 	
 	
 def add_page(request, category_name_url):
