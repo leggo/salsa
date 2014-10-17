@@ -6,7 +6,7 @@ from rango.models import Page
 from rango.forms import CategoryForm 
 from rango.forms import PageForm
 from rango.forms import UserForm, UserProfileForm
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
 from django.http import HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
 
@@ -65,7 +65,7 @@ def category(request, category_name_url):
 	return render_to_response('rango/category.html', context_dict, context)
 		
 	
-	
+@login_required	
 def add_category(request):
     # Get the context from the request.
     context = RequestContext(request)
@@ -97,7 +97,7 @@ def add_category(request):
 def decode_url(category_name_url):
 	return category_name_url.replace('_', ' ')
 	
-	
+@login_required	
 def add_page(request, category_name_url):
 	context = RequestContext(request)
 	
@@ -204,12 +204,18 @@ def user_login(request):
 	else:
 		return render_to_response('rango/login.html', {}, context)
 	
+	
 @login_required	
 def restricted(request):
 		return HttpResponse("Since you're logged in, you can see this text!")
 	
 	
+@login_required
+def user_logout(request):
+
+	logout(request)
 	
+	return HttpResponseRedirect('/rango/')
 	
 	
 	
