@@ -180,7 +180,10 @@ def register(request):
 			
 def user_login(request):
 	
+	
 	context = RequestContext(request)
+	context_dict = {}
+	
 	
 	if request.method == 'POST':
 		
@@ -195,11 +198,13 @@ def user_login(request):
 				return HttpResponseRedirect('/rango/')
 				
 			else:
-				return HttpResponse("Your Rango account is disabled.")
+				context_dict['disabled_account'] = True
+				return render_to_response('rango/login.html', context_dict, context)
 				
 		else:
 			print "Invalid login details: {0}, {1}".format(username, password)
-			return HttpResponse("Invalid login details supplied.")
+			context_dict['bad_details'] = True
+			return render_to_response('rango/login.html', context_dict, context)
 			
 	else:
 		return render_to_response('rango/login.html', {}, context)
@@ -207,7 +212,11 @@ def user_login(request):
 	
 @login_required	
 def restricted(request):
-		return HttpResponse("Since you're logged in, you can see this text!")
+		
+		context = RequestContext(request)
+		context_dict = {}
+		
+		return render_to_response('rango/restricted.html', context_dict, context)
 	
 	
 @login_required
