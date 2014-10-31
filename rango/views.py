@@ -9,21 +9,47 @@ from rango.forms import UserForm, UserProfileForm
 from django.contrib.auth import authenticate, login, logout
 from django.http import HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
+from datetime import datetime
+
+def encode_url(str):
+	return str.replace(' ', '_')
+
+
+def decode_url(category_name_url):
+	return category_name_url.replace('_', ' ')
+	
 
 def index(request):
+	
 	context = RequestContext(request)
 	
-	category_list = Category.objects.order_by('-likes')[:5]
-	most_viewed_pages = Page.objects.order_by('-views')[:5]
-	
-	context_dict = {'categories': category_list, 'pages': most_viewed_pages}
+	category_list = Category.objects.all()
+	context_dict = {'categories': category_list}
 	
 	for category in category_list:
-		category.url = category.name.replace(' ', '_')
+		category.url = encode_url(category.name)
 	
+#	page_list = Category.objects.order_by('-likes')[:5]
+	page_list = Page.objects.order_by('-views')[:5]
+	context_dict['pages'] = page_list
+#	context_dict = {'categories': category_list, 'pages': most_viewed_pages}
+		
+
+
+	
+	if request.session.get('last_visit'):
+		last_visit_time = request.session.get('last_visit')
+		visits = request.session.get('visits', 0)
+		
+		if (datetime.now() - datetime.strptime(last_visit_time[:-7], "%Y-%m-%d %H:%M:%S")).seconds > 5:
+			request.session['visits'] = visits + 1
+			request.session['last_visit'] = str(datetime.now())
+			
+	else:
+		request.session['last_visit'] = str(datetime.now())
+		request.session['visits'] = 1
+
 	return render_to_response('rango/index.html', context_dict, context)
-	
-	
 	
 	#return HttpResponse("Halli, Hallo, Haalle! Here is a link to <a href='http://127.0.0.1:8000/rango/about/'>about</a> ")
 	
@@ -94,9 +120,7 @@ def add_category(request):
     return render_to_response('rango/add_category.html', {'form': form}, context)
 	
 
-def decode_url(category_name_url):
-	return category_name_url.replace('_', ' ')
-	
+
 @login_required	
 def add_page(request, category_name_url):
 	context = RequestContext(request)
@@ -136,6 +160,7 @@ def add_page(request, category_name_url):
 			
 			
 def register(request):
+
 	context = RequestContext(request)
 	
 	registered = False
