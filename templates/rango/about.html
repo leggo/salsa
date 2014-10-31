@@ -6,6 +6,8 @@
 {% block body_block %}
 	<h1>About this website</h1>
 	<p>Here is a hot picture:</p>
+	<p>Visits: {{ visits }}</p>
+	<p>Last visited: {{ timer }}</p>
 			
 	<img src = "{% static 'cute.jpg' %}" alt ="Cute Asian girl" />
 {% endblock %}

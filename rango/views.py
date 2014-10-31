@@ -55,8 +55,14 @@ def index(request):
 	
 def about(request):
 	context = RequestContext(request)
-	context_dict = { 'schlurp': "Hi, my name is Schlurp!"}
-	return render_to_response('rango/about.html', context_dict, context)
+	if request.session.get('visits'):
+		count = request.session.get('visits')
+		time = request.session.get('last_visit')
+	else:
+		count = 0
+		
+	return render_to_response('rango/about.html', {'visits': count, 'timer': time}, context)
+	
 	#return HttpResponse('Yes, this is abuut. And <a href="http://127.0.0.1:8000/rango/">here</a> is a link to the home page')
 	
 def category(request, category_name_url):
