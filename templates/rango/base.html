@@ -1,5 +1,7 @@
 <!DOCTYPE html>
 {% load static %}
+
+
 <html>
 	<head>
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -54,7 +56,9 @@
 			<div class="row-fluid">
 				<div class="span3">
 					<div class=well sidebar-nav">
-						<!--- Empty for the timebeing -->
+
+						{% include "rango/category_list.html" %}
+
 					</div>
 					<!--/.well -->
 				</div>
