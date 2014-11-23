@@ -24,8 +24,10 @@ def index(request):
 	
 	context = RequestContext(request)
 	
-	category_list = Category.objects.all()
+	category_list = Category.objects.order_by('-views')[:4]
 	context_dict = {'categories': category_list}
+	cat_list = Category.objects.all()
+	context_dict['cat_list'] =  cat_list
 	
 	for category in category_list:
 		category.url = encode_url(category.name)
