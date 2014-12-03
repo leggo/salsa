@@ -1,1 +1,1 @@
-<br />{% for category in cat_list %}{{ category }}{% endfor %}
+{% if cat_list %}{% for category in cat_list %}<p><a href="/rango/category/{{ category.url }}">{{ category.name }}</a></p>{% endfor %}{% endif %}

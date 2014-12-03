@@ -3,6 +3,7 @@ from django.template import RequestContext
 from django.shortcuts import render_to_response
 from rango.models import Category
 from rango.models import Page
+from rango.models import UserProfile
 from rango.forms import CategoryForm 
 from rango.forms import PageForm
 from rango.forms import UserForm, UserProfileForm
@@ -19,6 +20,17 @@ def encode_url(str):
 def decode_url(category_name_url):
 	return category_name_url.replace('_', ' ')
 	
+	
+	
+def get_cat_list():
+	
+	cat_list = []
+	cat_list = Category.objects.all()
+	for category in cat_list:
+		category.url = encode_url(category.name)
+	
+	return cat_list
+	
 
 def index(request):
 	
@@ -26,8 +38,9 @@ def index(request):
 	
 	category_list = Category.objects.order_by('-views')[:4]
 	context_dict = {'categories': category_list}
-	cat_list = Category.objects.all()
-	context_dict['cat_list'] =  cat_list
+	
+
+	context_dict['cat_list'] = get_cat_list()
 	
 	for category in category_list:
 		category.url = encode_url(category.name)
@@ -56,26 +69,34 @@ def index(request):
 	
 	#return HttpResponse("Halli, Hallo, Haalle! Here is a link to <a href='http://127.0.0.1:8000/rango/about/'>about</a> ")
 	
+
+	
 def about(request):
 	context = RequestContext(request)
+	context_dict = { 'cat_list': get_cat_list() }
+
 	if request.session.get('visits'):
 		count = request.session.get('visits')
 		time = request.session.get('last_visit')
 	else:
 		count = 0
 		
-	return render_to_response('rango/about.html', {'visits': count, 'timer': time}, context)
+	context_dict['visits'] = count
+	context_dict['timer'] = time
+		
+		
+	return render_to_response('rango/about.html', context_dict, context)
 	
 	#return HttpResponse('Yes, this is abuut. And <a href="http://127.0.0.1:8000/rango/">here</a> is a link to the home page')
 	
 def category(request, category_name_url):
 
 	context = RequestContext(request)
-	
 	category_name = category_name_url.replace('_', ' ')
+	result_list = []
 	
 
-	context_dict = {'category_name': category_name, 'category_name_url': category_name_url}
+	context_dict = {'category_name': category_name, 'category_name_url': category_name_url, 'cat_list': get_cat_list()}
 	
 
 	
@@ -96,8 +117,17 @@ def category(request, category_name_url):
 	except Category.DoesNotExist:
 	
 		pass
+	
+	if request.method == 'POST':
+		query = request.POST['query'].strip()
+		if query:
+			result_list = run_query(query)
+	
+			context_dict['result_list'] = result_list
 		
 	return render_to_response('rango/category.html', context_dict, context)
+	
+
 		
 	
 @login_required	
@@ -126,7 +156,7 @@ def add_category(request):
 
     # Bad form (or form details), no form supplied...
     # Render the form with error messages (if any).
-    return render_to_response('rango/add_category.html', {'form': form}, context)
+    return render_to_response('rango/add_category.html', {'form': form, 'cat_list': get_cat_list()}, context)
 	
 
 
@@ -164,7 +194,8 @@ def add_page(request, category_name_url):
 		
 	return render_to_response('rango/add_page.html',
 			{'category_name_url': category_name_url,
-			'category_name': category_name, 'form': form},
+			'category_name': category_name, 'form': form, 
+			'cat_list': get_cat_list()},
 			context)
 			
 			
@@ -207,7 +238,8 @@ def register(request):
 		
 	return render_to_response(
 			'rango/register.html',
-			{'user_form': user_form, 'profile_form': profile_form, 'registered': registered},
+			{'user_form': user_form, 'profile_form': profile_form, 'registered': registered,
+			'cat_list': get_cat_list()},
 			context)
 			
 			
@@ -241,14 +273,14 @@ def user_login(request):
 			return render_to_response('rango/login.html', context_dict, context)
 			
 	else:
-		return render_to_response('rango/login.html', {}, context)
+		return render_to_response('rango/login.html', {'cat_list': get_cat_list()}, context)
 	
 	
 @login_required	
 def restricted(request):
 		
 		context = RequestContext(request)
-		context_dict = {}
+		context_dict = {'cat_list': get_cat_list()}
 		
 		return render_to_response('rango/restricted.html', context_dict, context)
 	
@@ -261,18 +293,19 @@ def user_logout(request):
 	return HttpResponseRedirect('/rango/')
 	
 	
-	
-def search(request):
+@login_required
+def profile(request):
 	context = RequestContext(request)
-	result_list = []
+
 	
-	if request.method == 'POST':
-		query = request.POST['query'].strip()
-		
-		if query:
-			result_list = run_query(query)
-			
-	return render_to_response('rango/search.html', {'result_list': result_list}, context)
+	myuser = UserProfile.objects.all()
+	mycontext = {'try': myuser}	
+
+
+	
+	
+	return render_to_response('rango/profile.html', mycontext, context)
+	
 
 	
 	
