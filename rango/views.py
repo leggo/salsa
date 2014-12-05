@@ -31,10 +31,16 @@ def get_cat_list():
 	
 	return cat_list
 	
-def track_url(request):
 	
+
+def track_url(request):
+	hello = 'no'
 	context = RequestContext(request)
-	return 'hello'
+	if request.method == 'GET':
+		if page_id in request.GET:
+			hello = 'yes'
+	return HttpResponse(hello)
+	
 def index(request):
 	
 	context = RequestContext(request)
