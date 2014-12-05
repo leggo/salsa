@@ -31,7 +31,7 @@ def get_cat_list():
 	
 	return cat_list
 	
-def track_url():
+def track_url(request):
 	
 	context = RequestContext(request)
 	return 'hello'
