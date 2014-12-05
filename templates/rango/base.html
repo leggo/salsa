@@ -31,7 +31,12 @@
 					<div class="nav-collapse collapse">
 						<ul class="nav pull-right">
 							{% if user.is_authenticated %}
-								<li class="navbar-text"><a href="/rango/profile/"><strong>My profile</strong></a></li>
+								{% if userprofile %}
+									<li class="navbar-text"><a href="/rango/profile/"><strong><img style="width:60px" src="/media/{{userprofile.picture}}/"/></strong></a></li>
+								{% else %}
+									<li class="navbar-text"><a href="/rango/profile/"><strong>{{user.username}}</strong></a></li>
+
+								{% endif %}
 								<li><a href="/rango/logout/">Logout</a></li>
 							{% else %}
 							<li><a href="/rango/register/">Register</a></li>

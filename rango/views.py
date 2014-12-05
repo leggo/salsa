@@ -31,7 +31,10 @@ def get_cat_list():
 	
 	return cat_list
 	
-
+def track_url():
+	
+	context = RequestContext(request)
+	return 'hello'
 def index(request):
 	
 	context = RequestContext(request)
@@ -297,9 +300,12 @@ def user_logout(request):
 def profile(request):
 	context = RequestContext(request)
 
-	
-	myuser = UserProfile.objects.all()
-	mycontext = {'try': myuser}	
+	try:
+		myuser = UserProfile.objects.get(user=request.user)
+	except:
+		myuser = None
+		
+	mycontext = {'userprofile': myuser}	
 
 
 	

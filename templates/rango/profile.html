@@ -5,23 +5,15 @@
 
 {% block body_block %}
 <div class="hero-unit">
-	<h2>{{ user.username }}'s profile</h2>
-	<p>e-mail: {{ user.email}}</p>
+	<h1>{{ user.username }}'s profile</h1>
+	<br />
+	<p><img style="width:500px" src="/media/{{userprofile.picture}}/"/></p>
+	<br />
+	<p><strong>e-mail: </strong>{{ user.email}}</p>
+	<p><strong>website: </strong><a href="{{ userprofile.website }}">{{ userprofile.website }}</a></p>
+
 	
-	{% if userprofile %}
-	<p>{{ userprofile.website }}</p>
-	{% elif userprofile.picture %}
-	<p>Yeayh</p>
-	<img src="{{ userprofile.picture }}"/>
-	{% else %}
-	<p>Ney</p>
-	{% endif %}
-	
-	{{try}}
-	{% for pic in try %}
-	<img src="/media/{{pic.picture}}/"/>
-	{{pic.picture}}
-	{% endfor%}
+
 
 	
 	
