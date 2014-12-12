@@ -48,6 +48,10 @@ def track_url(request):
 	
 	return HttpResponseRedirect(myurl)
 	
+	
+
+	
+	
 def index(request):
 	
 	context = RequestContext(request)
@@ -110,13 +114,10 @@ def category(request, category_name_url):
 	context = RequestContext(request)
 	category_name = category_name_url.replace('_', ' ')
 	result_list = []
-	
+	cat_list = get_cat_list()
 
-	context_dict = {'category_name': category_name, 'category_name_url': category_name_url, 'cat_list': get_cat_list()}
+	context_dict = {'category_name': category_name, 'cat_list': cat_list}
 	
-
-	
-
 	
 	try:
 		
@@ -130,7 +131,7 @@ def category(request, category_name_url):
 		
 		context_dict['pages'] = pages
 		
-		#context_dict['category_name_url'] = category_name_url
+		context_dict['category_name_url'] = category_name_url
 		
 	except Category.DoesNotExist:
 	
@@ -147,6 +148,24 @@ def category(request, category_name_url):
 	
 
 		
+@login_required
+def like_category(request):
+    context = RequestContext(request)
+    cat_id = None
+    if request.method == 'GET':
+        cat_id = request.GET['category_id']
+
+    likes = 0
+    if cat_id:
+        category = Category.objects.get(id=int(cat_id))
+        if category:
+            likes = category.likes + 1
+            category.likes =  likes
+            category.save()
+
+    return HttpResponse(likes)
+
+
 	
 @login_required	
 def add_category(request):
