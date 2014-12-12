@@ -2,6 +2,7 @@
 {% load static %}
 
 
+
 <html>
 	<head>
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -31,7 +32,7 @@
 					<div class="nav-collapse collapse">
 						<ul class="nav pull-right">
 							{% if user.is_authenticated %}
-								{% if userprofile %}
+								{% if userprofile.picture %}
 									<li class="navbar-text"><a href="/rango/profile/"><strong><img style="width:60px" src="/media/{{userprofile.picture}}/"/></strong></a></li>
 								{% else %}
 									<li class="navbar-text"><a href="/rango/profile/"><strong>{{user.username}}</strong></a></li>
@@ -62,9 +63,14 @@
 			<div class="row-fluid">
 				<div class="span3">
 					<div class=well sidebar-nav">
-
-						{% include "rango/category_list.html" %}
-
+						{% block sidebar %}
+						{% endblock %}
+						<div id="cats">
+							{% if cat_list %}
+								<ul class="nav nav-list"></ul>
+								{% include "rango/category_list.html" with cat_list=cat_list %}
+							{% endif %}
+						</div>
 					</div>
 					<!--/.well -->
 				</div>
@@ -90,6 +96,9 @@
 	</footer>
 
 		<script src="{% static 'js/jquery-2.1.1.min.js' %}"></script>
+		<script src="{% static '/js/jquery-2.1.1.js' %}"></script>
 		<script src="{% static 'js/bootstrap.min.js' %}"></script>
+		<script src="{% static '/js/rango-ajax.js' %}"></script>
+		
 	</body>
 </html>

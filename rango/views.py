@@ -24,8 +24,8 @@ def decode_url(category_name_url):
 	
 def get_cat_list():
 	
-	cat_list = []
 	cat_list = Category.objects.all()
+	
 	for category in cat_list:
 		category.url = encode_url(category.name)
 	
@@ -36,10 +36,17 @@ def get_cat_list():
 def track_url(request):
 	hello = 'no'
 	context = RequestContext(request)
+	myurl = "/rango/"
+	page_id = None
 	if request.method == 'GET':
-		if page_id in request.GET:
-			hello = 'yes'
-	return HttpResponse(hello)
+		if 'page_id' in request.GET:
+			page_id = request.GET['page_id']
+			page_object = Page.objects.get( id = page_id)
+			myurl = page_object.url
+			page_object.views = page_object.views + 1
+			page_object.save()
+	
+	return HttpResponseRedirect(myurl)
 	
 def index(request):
 	
@@ -115,9 +122,11 @@ def category(request, category_name_url):
 		
 		category = Category.objects.get(name = category_name)
 		
-		pages = Page.objects.filter(category=category)
-		
 		context_dict['category'] = category
+		
+		pages = Page.objects.filter(category=category).order_by('-views')
+		
+
 		
 		context_dict['pages'] = pages
 		
@@ -311,7 +320,7 @@ def profile(request):
 	except:
 		myuser = None
 		
-	mycontext = {'userprofile': myuser}	
+	mycontext = {'userprofile': myuser, 'cat_list':get_cat_list()}	
 
 
 	
@@ -319,5 +328,8 @@ def profile(request):
 	return render_to_response('rango/profile.html', mycontext, context)
 	
 
+def search(request):
+	context = RequestContext(request)
 	
+	return render_to_response('rango/search.html', context)
 	
