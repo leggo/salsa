@@ -31,7 +31,21 @@ def get_cat_list():
 	
 	return cat_list
 	
-	
+get_category_list(max_results=0, starts_with=''):
+		cat_list = []
+		if starts_with:
+				cat_list = Category.objects.filter(name__istartwith=starts_with)
+		else:
+				cat_list = Category.objects.all()
+				
+		if max_results > 0:
+				if len(cat_list) > max_results:
+						cat_list = cat_list[:max_results]
+						
+		for cat in cat_list:
+				cat.url = encode_url(cat.name)
+				
+		return cat_list
 
 def track_url(request):
 	hello = 'no'

@@ -32,6 +32,7 @@
 					</button>
 					<a class="brand" href="/rango/">Rango</a>
 					
+
 					<div class="nav-collapse collapse">
 						<ul class="nav pull-right">
 							{% if user.is_authenticated %}
@@ -97,10 +98,10 @@
 			<p>&copy; Rango: How to Tango with Django 2014</p>
 		</div>
 	</footer>
-	<script src="{% static 'js/jquery-2.1.1.min.js' %}"></script>
-	<script src="{% static 'js/jquery-2.1.1.js' %}"></script>
+	<script type='text/javascript' src='http://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js?ver=1.4.2'></script>
+
 	<script src="{% static 'js/bootstrap.min.js' %}"></script>
-	<script src="{% static '/js/rango-ajax.js' %}"></script>
+	<script src="{% static 'js/rango-ajax.js' %}"></script>
 	</body>
 
 </html>
