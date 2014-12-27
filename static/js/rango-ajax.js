@@ -1,6 +1,6 @@
 $(document).ready(function() {
 
-    $('#likes').click(function(){
+	$('#likes').click(function(){
 		var catid;
 		catid = $(this).attr("data-catid");
 		$.get('/rango/like_category/', {category_id: catid}, function(data){
@@ -8,5 +8,13 @@ $(document).ready(function() {
                $('#likes').hide();
           });
 	});
+	
+	$('#suggestion').keyup(function(){
+		var query;
+		query = $(this).val();
+		$.get('/rango/suggest_category/', {suggestion: query}, function(data){
+		 $('#cats').html(data);
+        });
+});
 });
 

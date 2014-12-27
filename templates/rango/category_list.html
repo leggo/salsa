@@ -1,1 +1,1 @@
-<ul class="nav nav-list">	{% if cat_list %}		{% for category in cat_list %}			<p><a href="/rango/category/{{ category.url }}">{{ category.name }}</a></p>		{% endfor %}	{% else %}		<p>No categories at present</p>	{% endif %}</ul>
+<ul class="nav nav-list">	{% if cat_list %}		{% for category in cat_list %}			<li><a href="/rango/category/{{ category.url }}">{{ category.name }}</a></li>		{% endfor %}	{% else %}		<p>No categories at present</p>	{% endif %}</ul>
