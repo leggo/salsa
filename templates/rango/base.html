@@ -70,7 +70,7 @@
                     {% block navbar %}
                     {% endblock %}
                 </ul>
-
+		<div class="hero-unit">
 		<ul class="nav nav-list">
 			<li class="nav-header">Find a Category</li>
 			<form>
@@ -78,12 +78,13 @@
 			<li><input  class="search-query span10" type="text" name="suggestion" value="" id="suggestion" /></li>
 			</form>
 		</ul>
+	{% if cat_list %}
+		<div id="cats">
+			{% include 'rango/category_list.html' with cat_list=cat_list %}
+		</div>
+	{% endif %}
 
-        {% if cat_list %}
-		    <div id="cats">
-			    {% include 'rango/category_list.html' with cat_list=cat_list %}
-		    </div>
-	    {% endif %}
+
 <!---
     <div id="cats">
 		   {% if cat_list %}
@@ -91,7 +92,7 @@
 			   {% include 'rango/category_list.html' with cat_list=cat_list %}
 		   {% endif %}
 		</div>
---->
+--->		</div>
             </div>
             <!--/.well -->
 

@@ -22,15 +22,7 @@ def decode_url(category_name_url):
 	
 	
 	
-def get_cat_list():
-	
-	cat_list = Category.objects.all()
-	
-	for category in cat_list:
-		category.url = encode_url(category.name)
-	
-	return cat_list
-	
+
 def get_category_list(max_results=0, starts_with=''):
         cat_list = []
         if starts_with:
@@ -73,11 +65,11 @@ def index(request):
 	
 	context = RequestContext(request)
 	
-	category_list = Category.objects.order_by('-views')[:4]
+	category_list = Category.objects.order_by('-views')[:5]
 	context_dict = {'categories': category_list}
 	
 
-	context_dict['cat_list'] = get_cat_list()
+	context_dict['cat_list'] = get_category_list()
 	
 	for category in category_list:
 		category.url = encode_url(category.name)
@@ -110,7 +102,7 @@ def index(request):
 	
 def about(request):
 	context = RequestContext(request)
-	context_dict = { 'cat_list': get_cat_list() }
+	context_dict = { 'cat_list': get_category_list() }
 
 	if request.session.get('visits'):
 		count = request.session.get('visits')
@@ -119,7 +111,7 @@ def about(request):
 		count = 0
 		
 	context_dict['visits'] = count
-	context_dict['timer'] = time
+
 		
 		
 	return render_to_response('rango/about.html', context_dict, context)
@@ -131,7 +123,7 @@ def category(request, category_name_url):
 	context = RequestContext(request)
 	category_name = category_name_url.replace('_', ' ')
 	result_list = []
-	cat_list = get_cat_list()
+	cat_list = get_category_list()
 
 	context_dict = {'category_name': category_name, 'cat_list': cat_list}
 	
@@ -249,7 +241,7 @@ def add_page(request, category_name_url):
 	return render_to_response('rango/add_page.html',
 			{'category_name_url': category_name_url,
 			'category_name': category_name, 'form': form, 
-			'cat_list': get_cat_list()},
+			'cat_list': get_category_list()},
 			context)
 			
 			
@@ -293,7 +285,7 @@ def register(request):
 	return render_to_response(
 			'rango/register.html',
 			{'user_form': user_form, 'profile_form': profile_form, 'registered': registered,
-			'cat_list': get_cat_list()},
+			'cat_list': get_category_list()},
 			context)
 			
 			
@@ -327,14 +319,14 @@ def user_login(request):
 			return render_to_response('rango/login.html', context_dict, context)
 			
 	else:
-		return render_to_response('rango/login.html', {'cat_list': get_cat_list()}, context)
+		return render_to_response('rango/login.html', {'cat_list': get_category_list()}, context)
 	
 	
 @login_required	
 def restricted(request):
 		
 		context = RequestContext(request)
-		context_dict = {'cat_list': get_cat_list()}
+		context_dict = {'cat_list': get_category_list()}
 		
 		return render_to_response('rango/restricted.html', context_dict, context)
 	
@@ -356,7 +348,7 @@ def profile(request):
 	except:
 		myuser = None
 		
-	mycontext = {'userprofile': myuser, 'cat_list':get_cat_list()}	
+	mycontext = {'userprofile': myuser, 'cat_list':get_category_list()}	
 
 
 	
@@ -371,12 +363,16 @@ def search(request):
 	
 	
 def suggest_category(request):
-        context = RequestContext(request)
-        cat_list = []
-        starts_with = ''
-        if request.method == 'GET':
-                starts_with = request.GET['suggestion']
+    context = RequestContext(request)
+    cat_list = []
+    starts_with = ''
+    if request.method == 'GET':
+        starts_with = request.GET['suggestion']
+    else:
+        starts_with = request.POST['suggestion']
 
-        cat_list = get_category_list(8, starts_with)
+    cat_list = get_category_list(8, starts_with)
 
-        return render_to_response('rango/category_list.html', {'cat_list': cat_list }, context)
+    return render_to_response('rango/category_list.html', {'cat_list': cat_list }, context)
+		
+		
