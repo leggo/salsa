@@ -4,11 +4,11 @@
 
 {% block body_block %}
 <div class="hero-unit">
-	
+
 	<h1>{{ category_name }}</h1>
-	
-	
-	
+
+
+
 
 {% if pages %}
 <ul>
@@ -42,7 +42,7 @@
 
 	<h1>Search with Rango</h1>
 	<br />
-	
+
 	<div class="container-fluid">
 		<form class="form-signin span8" id="user_form" method="post" action="/rango/category/{{ category_name_url }}/">
 			{% csrf_token %}
@@ -50,11 +50,11 @@
 			<input class="btn btn-primary" type="submit" name="submit" value="Search" />
 			<br/ >
 		</form>
-		
+
 		{% if result_list %}
-		
+
 		<div style="clear: both;">
-		
+
 			<ol>
 			{% for result in result_list %}
 				<div id="pages">
@@ -70,11 +70,11 @@
 			{% endfor %}
 			</ol>
 		</div>
-		
+
 		{% endif %}
 	</div>
 </div>
-	
+
 
 
 {% endblock %}

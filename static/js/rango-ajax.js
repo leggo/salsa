@@ -21,6 +21,9 @@ $(document).ready(function() {
           });
 	});
 	
+	
+	$('rango-add').click(function(){
+	
 
 });
 

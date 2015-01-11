@@ -374,5 +374,22 @@ def suggest_category(request):
     cat_list = get_category_list(8, starts_with)
 
     return render_to_response('rango/category_list.html', {'cat_list': cat_list }, context)
+	
+@login_required	
+def auto_add_page(request):
+	context = RequestContext(request)
+	cat_id = None
+	url = None
+	title = None
+	context_dict = {}
+	if request.method == 'GET':
+		cat_id = request.GET['category_id']
+		url = request.GET['url']
+		title = request.GET['title']
+		if cat_id:
+			category = Category.objects.get(id=int(cat_id))
+			p = Page.objects.get_or_create(category=category).order_by('-views')
+			context_dict['pages
+		
 		
 		
