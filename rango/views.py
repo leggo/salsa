@@ -161,6 +161,7 @@ def category(request, category_name_url):
 def like_category(request):
     context = RequestContext(request)
     cat_id = None
+	
     if request.method == 'GET':
         cat_id = request.GET['category_id']
 
@@ -180,8 +181,7 @@ def like_category(request):
 def add_category(request):
     # Get the context from the request.
     context = RequestContext(request)
-
-    # A HTTP POST?
+    myvar = 'fuckyou'
     if request.method == 'POST':
         form = CategoryForm(request.POST)
 
@@ -202,7 +202,7 @@ def add_category(request):
 
     # Bad form (or form details), no form supplied...
     # Render the form with error messages (if any).
-    return render_to_response('rango/add_category.html', {'form': form, 'cat_list': get_cat_list()}, context)
+    return render_to_response('rango/add_category.html', {'form': form, 'cat_list': get_category_list()}, context)
 	
 
 
@@ -375,6 +375,8 @@ def suggest_category(request):
 
     return render_to_response('rango/category_list.html', {'cat_list': cat_list }, context)
 	
+	
+	
 @login_required	
 def auto_add_page(request):
 	context = RequestContext(request)
@@ -388,8 +390,14 @@ def auto_add_page(request):
 		title = request.GET['title']
 		if cat_id:
 			category = Category.objects.get(id=int(cat_id))
-			p = Page.objects.get_or_create(category=category).order_by('-views')
-			context_dict['pages
+			p = Page.objects.get_or_create(category=category, title=title, url=url)
+			
+			pages = Page.objects.filter(category=category).order_by('-views')
+			
+			context_dict['pages'] = pages
+	
+	return render_to_response('rango/page_list.html', context_dict, context)
+			
 		
 		
 		
